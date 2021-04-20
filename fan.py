@@ -22,7 +22,7 @@ def main():
         if (int(gpu) > 65):
             print('GPU'+str(i)+' - TOO HOT!')
             targetFanNum = i * 2
-            targetFanSpeed = max(min(100,round(int(fans[i])+10, -1)),0)
+            targetFanSpeed = int(max(min(100,round(int(fans[i])+10, -1)),0))
             print('targetFanNum'+str(targetFanNum))
             print('targetFanSpeed'+str(targetFanSpeed))
             cmdGpuChange1 = ("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1")
@@ -34,7 +34,7 @@ def main():
         elif (int(gpu) < 60):
             print('GPU'+str(i)+' - fan speed can be decreased.')
             targetFanNum = i * 2
-            targetFanSpeed = max(min(100,round(int(fans[i])-10, -1)),0)
+            targetFanSpeed = int(max(min(100,round(int(fans[i])-10, -1)),0))
             print('targetFanNum'+str(targetFanNum))
             print('targetFanSpeed'+str(targetFanSpeed))
             cmdGpuChange1 = ("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1")
