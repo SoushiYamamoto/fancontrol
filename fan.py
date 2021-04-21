@@ -11,6 +11,11 @@ def res_cmd_no_lfeed(cmd):
     return [str(x).rstrip("\n") for x in res_cmd_lfeed(cmd)]
 
 def main():
+    with open('/fan_config.txt') as f:
+        line = f.readline()
+        print('config file (/fan_config) was loaded.')
+        values=line.split(' ')
+        print('targetTempUpper='+str(values[0]+' targetTempBottom='+str(values[1])))
     cmd = ("nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits")
     gpus = res_cmd_no_lfeed(cmd)
     print(res_cmd_no_lfeed(cmd))
