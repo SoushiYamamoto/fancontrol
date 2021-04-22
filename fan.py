@@ -17,6 +17,7 @@ def writeLog(message):
     print(message)
 
 def main():
+    # prep log file
     if (os.path.exists('/autofan.log')):
         writeLog('Log file size='+str(os.path.getsize('/autofan.log')))
         if (os.path.getsize('/autofan.log') > 10485760):
