@@ -31,10 +31,10 @@ def main():
         writeLog('targetTempUpper='+str(values[0]+' targetTempBottom='+str(values[1])))
     cmd = ("nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits")
     gpus = res_cmd_no_lfeed(cmd)
-    writeLog(gpus.join(','))
+    writeLog(",".join(gpus))
     cmdFan = ("nvidia-smi --query-gpu=fan.speed --format=csv,noheader,nounits")
     fans = res_cmd_no_lfeed(cmdFan)
-    writeLog(fans.join(','))
+    writeLog(",".join(fans))
 
     if (len(gpus) == 0):
         result=res_cmd_no_lfeed("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
