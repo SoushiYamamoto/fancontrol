@@ -18,7 +18,7 @@ def writeLog(message):
 
 def main():
     if (os.path.exists('/autofan.log')):
-        writeLog(os.path.getsize('/autofan.log'))
+        writeLog('Log file size='+str(os.path.getsize('/autofan.log')))
         if (os.path.getsize('/autofan.log') > 10485760):
             for i in range(10000000):
                 if (os.path.exists('/autofan.'+str(i)+'.log') == false):
@@ -37,9 +37,8 @@ def main():
     writeLog(fans.join(','))
 
     if (len(gpus) == 0):
-        "DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0"
-        with open('/autofan.log', mode='a') as flog:
-            flog.write("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
+        result=res_cmd_no_lfeed("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
+        writeLog("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
 
     for i, gpu in enumerate(gpus):
         if (int(gpu) > int(values[0])):
