@@ -17,17 +17,18 @@ def writeLog(message):
     print(message)
 
 def main():
-    print(os.path.getsize('/autofan.log'))
-    if (os.path.getsize('/autofan.log') > 10485760):
-        for i in range(10000000):
-            if (os.path.exists('/autofan.'+str(i)+'.log') == false):
-                os.rename('/autofan.log', 'autofan.'+str(i)+'log')
+    if (os.path.exists('/autofan.log')):
+        writeLog(os.path.getsize('/autofan.log'))
+        if (os.path.getsize('/autofan.log') > 10485760):
+            for i in range(10000000):
+                if (os.path.exists('/autofan.'+str(i)+'.log') == false):
+                    os.rename('/autofan.log', 'autofan.'+str(i)+'log')
 
     with open('/fan_config.txt') as f:
         line = f.readline()
-        print('config file (/fan_config) was loaded.')
+        writeLog('config file (/fan_config) was loaded.')
         values=line.split(' ')
-        print('targetTempUpper='+str(values[0]+' targetTempBottom='+str(values[1])))
+        writeLog('targetTempUpper='+str(values[0]+' targetTempBottom='+str(values[1])))
     cmd = ("nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits")
     gpus = res_cmd_no_lfeed(cmd)
     writeLog(gpus)
