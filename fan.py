@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import os
 import subprocess
 
 def res_cmd_lfeed(cmd):
@@ -10,7 +11,18 @@ def res_cmd_lfeed(cmd):
 def res_cmd_no_lfeed(cmd):
     return [str(x).rstrip("\n") for x in res_cmd_lfeed(cmd)]
 
+def writeLog(message):
+    with open('/autofan.log', mode='a') as flog:
+        flog.write('\n'+message)
+    print(message)
+
 def main():
+    print(os.path.getsize('/autofan.log'))
+    if (os.path.getsize('/autofan.log') > 10485760):
+        for i in range(10000000):
+            if (os.path.exists('/autofan.'+str(i)+'.log') == false):
+                os.rename('/autofan.log', 'autofan.'+str(i)+'log')
+
     with open('/fan_config.txt') as f:
         line = f.readline()
         print('config file (/fan_config) was loaded.')
@@ -18,41 +30,49 @@ def main():
         print('targetTempUpper='+str(values[0]+' targetTempBottom='+str(values[1])))
     cmd = ("nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits")
     gpus = res_cmd_no_lfeed(cmd)
-    print(res_cmd_no_lfeed(cmd))
+    writeLog(gpus)
     cmdFan = ("nvidia-smi --query-gpu=fan.speed --format=csv,noheader,nounits")
     fans = res_cmd_no_lfeed(cmdFan)
-    print(res_cmd_no_lfeed(cmdFan))
+    writeLog(fans)
 
     if (len(gpus) == 0):
         "DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0"
+        with open('/autofan.log', mode='a') as flog:
+            flog.write("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
 
     for i, gpu in enumerate(gpus):
-        if int(gpu) > int(values[0]):
-            print('GPU'+str(i)+' - TOO HOT!')
+        if (int(gpu) > int(values[0])):
+            writeLog('GPU'+str(i)+' - TOO HOT!')
             targetFanNum = i * 2
             targetFanSpeed = int(max(min(100,round(int(fans[i])+10, -1)),40))
-            print('targetFanNum'+str(targetFanNum))
-            print('targetFanSpeed'+str(targetFanSpeed))
+            writeLog('targetFanNum'+str(targetFanNum))
+            writeLog('targetFanSpeed'+str(targetFanSpeed))
             cmdGpuChange1 = ("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1")
             result=res_cmd_no_lfeed(cmdGpuChange1)
+            writeLog(cmdGpuChange1)
             cmdFanChange1 = ("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [fan:"+str(targetFanNum)+"]/GPUTargetFanSpeed="+str(targetFanSpeed))
             result=res_cmd_no_lfeed(cmdFanChange1)
+            writeLog(cmdFanChange1)
             cmdFanChange2 = ("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [fan:"+str(targetFanNum+1)+"]/GPUTargetFanSpeed="+str(targetFanSpeed))
             result=res_cmd_no_lfeed(cmdFanChange2)
-        elif int(gpu) < int(values[1]):
-            print('GPU'+str(i)+' - fan speed can be decreased.')
+            writeLog(cmdFanChange2)
+        elif (int(gpu) < int(values[1])):
+            writeLog('GPU'+str(i)+' - fan speed can be decreased.')
             targetFanNum = i * 2
             targetFanSpeed = int(max(min(100,round(int(fans[i])-10, -1)),40))
-            print('targetFanNum'+str(targetFanNum))
-            print('targetFanSpeed'+str(targetFanSpeed))
+            writeLog('targetFanNum'+str(targetFanNum))
+            writeLog('targetFanSpeed'+str(targetFanSpeed))
             cmdGpuChange1 = ("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=1")
             result=res_cmd_no_lfeed(cmdGpuChange1)
+            writeLog(cmdGpuChange1)
             cmdFanChange1 = ("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [fan:"+str(targetFanNum)+"]/GPUTargetFanSpeed="+str(targetFanSpeed))
             result=res_cmd_no_lfeed(cmdFanChange1)
+            writeLog(cmdFanChange1)
             cmdFanChange2 = ("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [fan:"+str(targetFanNum+1)+"]/GPUTargetFanSpeed="+str(targetFanSpeed))
             result=res_cmd_no_lfeed(cmdFanChange2)
+            writeLog(cmdFanChange2)
         else:
-            print('GPU'+str(i)+' is stable.')
+            writeLog('GPU'+str(i)+' is stable.')
 
 if __name__ == '__main__':
     main()
