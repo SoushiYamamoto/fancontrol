@@ -20,7 +20,7 @@ def writeLog(message):
 def main():
     # outputs date/time
     dt_now = datetime.datetime.now()
-    writeLog(dt_now.strftime('%Y年%m月%d日 %H:%M:%S'))
+    writeLog(dt_now.strftime('%Y%m%d %H:%M:%S'))
 
     # prep log file
     if (os.path.exists('/autofan.log')):
