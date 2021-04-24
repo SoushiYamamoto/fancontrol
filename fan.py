@@ -23,11 +23,11 @@ def main():
     writeLog(dt_now.strftime('%Y%m%d %H:%M:%S'))
 
     # prep log file
-    if (os.path.exists('/autofan.log')):
+    if os.path.exists('/autofan.log'):
         writeLog('Log file size='+str(os.path.getsize('/autofan.log')))
-        if (os.path.getsize('/autofan.log') > 1048):
+        if os.path.getsize('/autofan.log') > 1048:
             for i in range(10000):
-                if (os.path.exists('/autofan.'+str(i)+'.log') == false):
+                if not os.path.exists('/autofan.'+str(i)+'.log'):
                     os.rename('/autofan.log', 'autofan.'+str(i)+'log')
                     break
 
@@ -43,17 +43,17 @@ def main():
     fans = res_cmd_no_lfeed(cmdFan)
     writeLog(",".join(fans))
 
-    if (len(gpus) == 0):
+    if len(gpus) == 0:
         result=res_cmd_no_lfeed("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
         writeLog("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
 
     for i in range(len(gpus)*2):
-        if (fans[i].isdigit() == false):
+        if not fans[i].isdigit():
             writeLog("Fan["+str(i)+"] returned ERR! => rebooting...")
             result = res_cmd_no_lfeed("reboot now")
 
     for i, gpu in enumerate(gpus):
-        if (int(gpu) > int(values[0])):
+        if int(gpu) > int(values[0]):
             writeLog('GPU'+str(i)+' - TOO HOT!')
             targetFanNum = i * 2
             targetFanSpeed = int(max(min(100,round(int(fans[i])+10, -1)),40))
@@ -68,7 +68,7 @@ def main():
             cmdFanChange2 = ("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [fan:"+str(targetFanNum+1)+"]/GPUTargetFanSpeed="+str(targetFanSpeed))
             result=res_cmd_no_lfeed(cmdFanChange2)
             writeLog(cmdFanChange2)
-        elif (int(gpu) < int(values[1])):
+        elif int(gpu) < int(values[1]):
             writeLog('GPU'+str(i)+' - fan speed can be decreased.')
             targetFanNum = i * 2
             targetFanSpeed = int(max(min(100,round(int(fans[i])-10, -1)),40))
