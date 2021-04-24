@@ -47,7 +47,7 @@ def main():
         result=res_cmd_no_lfeed("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
         writeLog("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
 
-    for i in range(len(gpus)*2):
+    for i in range(len(gpus)):
         if not fans[i].isdigit():
             writeLog("Fan["+str(i)+"] returned ERR! => rebooting...")
             result = res_cmd_no_lfeed("reboot now")
