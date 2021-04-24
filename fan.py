@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import datetime
 
 def res_cmd_lfeed(cmd):
     return subprocess.Popen(
@@ -17,13 +18,18 @@ def writeLog(message):
     print(message)
 
 def main():
+    # outputs date/time
+    dt_now = datetime.datetime.now()
+    writeLog(dt_now.strftime('%Y年%m月%d日 %H:%M:%S'))
+
     # prep log file
     if (os.path.exists('/autofan.log')):
         writeLog('Log file size='+str(os.path.getsize('/autofan.log')))
-        if (os.path.getsize('/autofan.log') > 10485760):
-            for i in range(10000000):
+        if (os.path.getsize('/autofan.log') > 1048):
+            for i in range(10000):
                 if (os.path.exists('/autofan.'+str(i)+'.log') == false):
                     os.rename('/autofan.log', 'autofan.'+str(i)+'log')
+                    break
 
     with open('/fan_config.txt') as f:
         line = f.readline()
@@ -40,6 +46,11 @@ def main():
     if (len(gpus) == 0):
         result=res_cmd_no_lfeed("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
         writeLog("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
+
+    for i in range(len(gpus)*2):
+        if (fans[i].isdigit() == false):
+            writeLog("Fan["+str(i)+"] returned ERR! => rebooting...")
+            result = res_cmd_no_lfeed("reboot now")
 
     for i, gpu in enumerate(gpus):
         if (int(gpu) > int(values[0])):
