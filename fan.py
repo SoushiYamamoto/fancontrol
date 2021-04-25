@@ -27,8 +27,8 @@ def main():
         writeLog('Log file size='+str(os.path.getsize('/autofan.log')))
         if os.path.getsize('/autofan.log') > 1048:
             for i in range(10000):
-                if not os.path.exists('/autofan.'+str(i)+'.log'):
-                    os.rename('/autofan.log', 'autofan.'+str(i)+'log')
+                if os.path.exists('/autofan.'+str(i)+'.log') == False:
+                    os.rename('/autofan.log', 'autofan.'+str(i)+'.log')
                     break
 
     with open('/fan_config.txt') as f:
@@ -48,7 +48,7 @@ def main():
         writeLog("DISPLAY=:0 XAUTHORITY=/var/run/lightdm/root/:0 nvidia-settings -a [gpu:"+str(i)+"]/GPUFanControlState=0")
 
     for i in range(len(gpus)):
-        if not fans[i].isdigit():
+        if fans[i].isdigit() == False:
             writeLog("Fan["+str(i)+"] returned ERR! => rebooting...")
             result = res_cmd_no_lfeed("reboot now")
 
