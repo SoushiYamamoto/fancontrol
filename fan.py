@@ -51,6 +51,8 @@ def main():
         if fans[i].isdigit() == False:
             writeLog("Fan["+str(i)+"] returned ERR! => rebooting...")
             result = res_cmd_no_lfeed("reboot now")
+        else:
+            writeLog("Fan["+str(i)+"] value is OK")
 
     for i, gpu in enumerate(gpus):
         if int(gpu) > int(values[0]):
