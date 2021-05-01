@@ -1,1 +1,1 @@
-*/10 * * * *   root /usr/bin/python /fan.py
+* * * * * /usr/bin/python /fan.py
