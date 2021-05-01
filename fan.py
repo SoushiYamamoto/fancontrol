@@ -19,13 +19,13 @@ def writeLog(message):
 
 def main():
     # prep log file
-    if os.path.exists('/autofan.log'):
-        writeLog('Log file size='+str(os.path.getsize('/autofan.log')))
-        if os.path.getsize('/autofan.log') > 1048:
-            for i in range(10000):
-                if os.path.exists('/autofan.'+str(i)+'.log') == False:
-                    os.rename('/autofan.log', 'autofan.'+str(i)+'.log')
-                    break
+    #if os.path.exists('/autofan.log'):
+    #    writeLog('Log file size='+str(os.path.getsize('/autofan.log')))
+    #    if os.path.getsize('/autofan.log') > 1048:
+    #        for i in range(10000):
+    #            if os.path.exists('/autofan.'+str(i)+'.log') == False:
+    #                os.rename('/autofan.log', 'autofan.'+str(i)+'.log')
+    #                break
 
     # outputs date/time
     dt_now = datetime.datetime.now()
